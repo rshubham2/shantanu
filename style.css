@@ -1,0 +1,85 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #0a0a0a;
+    color: #00ff00;
+    overflow: hidden;
+}
+
+#card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(20, 20, 20, 0.8);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    z-index: 10;
+}
+
+#hologram {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+}
+
+h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#message {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Courier New', monospace;
+}
+
+#controls {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+button {
+    background-color: transparent;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background-color: #00ff00;
+    color: #0a0a0a;
+}
+
+#matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+#profile-pic {
+  border: 2px solid #00ff00; /* Add a border */
+  box-shadow: 0 0 5px rgba(0, 255, 0, 0.5); /* Add a shadow */
+}
+
+.lightbox-image {
+  max-height: 80vh; /* Set a maximum height for the lightbox image */
+  object-fit: contain; /* Maintain aspect ratio and fit within the container */
+}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Shantanu!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #000;
+            color: #0f0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .container {
+            max-width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #0f0;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #0f0;
+        }
+
+        #revealBtn {
+            background-color: transparent;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        #revealBtn:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        #photoCanvas {
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #0f0;
+            max-width: 100%;
+            height: auto;
+        }
+
+        #messageBox {
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 1px solid #0f0;
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 600px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            #revealBtn {
+                font-size: 1rem;
+                padding: 0.8rem 1.6rem;
+            }
+
+            #photoCanvas {
+                width: 90%;
+                height: auto;
+            }
+
+            #messageBox {
+                font-size: 1rem;
+                height: 80px;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="container">
+        <h1>Happy Birthday, Shantanu!</h1>
+        <p class="subtitle">Enter the Matrix for your birthday surprise</p>
+        <button id="revealBtn">JACK IN</button>
+        <canvas id="photoCanvas" width="300" height="300" style="display: none;"></canvas>
+        <div id="messageBox" style="display: none;"></div>
+    </div>
+    <script>
+            const revealBtn = document.getElementById('revealBtn');
+            const photoCanvas = document.getElementById('photoCanvas');
+            const ctx = photoCanvas.getContext('2d');
+            const messageBox = document.getElementById('messageBox');
+            const messages = [
+                "Happy birthday to our brilliant mechanical engineer!",
+                "Wishing you a year full of innovative ideas and success!",
+                "May your birthday be as extraordinary as your engineering skills!",
+                "Here's to another year of making the impossible possible!",
+                "Celebrating the birthday of the man who can fix anything!"
+            ];
+
+            revealBtn.addEventListener('click', () => {
+                revealBtn.style.display = 'none';
+                photoCanvas.style.display = 'block';
+                messageBox.style.display = 'flex';
+
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = 'shantanu.png';
+                img.onload = () => {
+                    const canvasWidth = 300;
+                    const canvasHeight = 300;
+                    const pixelSize = 5; // Smaller pixel size for better clarity
+                    const totalPixels = (canvasWidth / pixelSize) * (canvasHeight / pixelSize);
+                    let revealedPixels = 0;
+
+                    // Create an off-screen canvas for the pixelated image
+                    const offscreenCanvas = document.createElement('canvas');
+                    offscreenCanvas.width = canvasWidth;
+                    offscreenCanvas.height = canvasHeight;
+                    const offscreenCtx = offscreenCanvas.getContext('2d');
+
+                    // Draw the full image on the off-screen canvas
+                    offscreenCtx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+
+                    function revealPixel() {
+                        for (let i = 0; i < 100; i++) { // Reveal 100 pixels at a time for faster reveal
+                            if (revealedPixels >= totalPixels) break;
+
+                            const x = Math.floor(Math.random() * (canvasWidth / pixelSize)) * pixelSize;
+                            const y = Math.floor(Math.random() * (canvasHeight / pixelSize)) * pixelSize;
+
+                            // Get the color of the pixel from the off-screen canvas
+                            const imageData = offscreenCtx.getImageData(x, y, pixelSize, pixelSize);
+
+                            // Draw the pixel on the main canvas
+                            ctx.putImageData(imageData, x, y);
+
+                            revealedPixels++;
+                        }
+
+                        if (revealedPixels < totalPixels) {
+                            requestAnimationFrame(revealPixel);
+                        } else {
+                            // Fully reveal the image after the pixelation effect
+                            setTimeout(() => {
+                                ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+                            }, 500);
+                        }
+                    }
+
+                    revealPixel();
+                };
+
+                startMatrix();
+            });
+        function startMatrix() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
+            const matrixChars = matrix.split("");
+
+            const fontSize = 10;
+            const columns = canvas.width / fontSize;
+
+            const drops = [];
+            for (let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "#0F0";
+                ctx.font = fontSize + "px monospace";
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+
+                    drops[i]++;
+                }
+            }
+
+            setInterval(drawMatrix, 33);
+        }
+
+        let currentMessageIndex = 0;
+        function changeMessage() {
+            currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+            messageBox.textContent = messages[currentMessageIndex];
+            messageBox.style.animation = 'none';
+            messageBox.offsetHeight; // Trigger reflow
+            messageBox.style.animation = 'pulse 0.5s';
+        }
+
+        setInterval(changeMessage, 5000); // Change message every 5 seconds
+    </script>
+</body>
+
+</html>
