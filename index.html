@@ -28,14 +28,14 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             position: relative;
             z-index: 1;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #0f0;
             margin-bottom: 1rem;
             text-shadow: 0 0 10px #0f0;
@@ -47,17 +47,67 @@
             color: #0f0;
         }
 
+        #riddleContainer {
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            max-width: 80%;
+        }
+
+        #riddleText {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        #answerInput {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            width: 80%;
+            max-width: 300px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        #submitAnswer {
+            background-color: rgba(0, 255, 0, 0.1);
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #submitAnswer:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
         #revealBtn {
-            background-color: transparent;
+            display: none;
+            background-color: rgba(0, 255, 0, 0.1);
             color: #0f0;
             border: 2px solid #0f0;
             padding: 1rem 2rem;
             font-size: 1.2rem;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 25px;
             margin-bottom: 2rem;
             transition: all 0.3s ease;
             font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite;
         }
 
         #revealBtn:hover {
@@ -70,8 +120,9 @@
             border: 2px solid #0f0;
             border-radius: 10px;
             box-shadow: 0 0 20px #0f0;
-            max-width: 100%;
+            max-width: 90%;
             height: auto;
+            display: none;
         }
 
         #messageBox {
@@ -82,11 +133,11 @@
             border-radius: 5px;
             width: 80%;
             max-width: 600px;
-            height: 100px;
-            display: flex;
+            height: 80px;
+            display: none;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
             text-shadow: 0 0 5px #0f0;
         }
 
@@ -99,14 +150,16 @@
 
         @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
-            .subtitle {
+            .subtitle,
+            #riddleText {
                 font-size: 0.9rem;
             }
 
-            #revealBtn {
+            #revealBtn,
+            #submitAnswer {
                 font-size: 1rem;
                 padding: 0.8rem 1.6rem;
             }
@@ -117,22 +170,25 @@
             }
 
             #messageBox {
-                font-size: 1rem;
-                height: 80px;
+                font-size: 0.9rem;
+                height: 60px;
             }
         }
 
         @keyframes pulse {
             0% {
                 transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
             }
 
-            50% {
+            70% {
                 transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
             }
 
             100% {
                 transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
             }
         }
     </style>
@@ -142,79 +198,95 @@
     <canvas id="matrixCanvas"></canvas>
     <div class="container">
         <h1>Happy Birthday, Shantanu!</h1>
-        <p class="subtitle">Enter the Matrix for your birthday surprise</p>
+        <div id="riddleContainer">
+            <p id="riddleText">I am not alive, but I grow;<br>I don't have lungs, but I need air;<br>I don't have a
+                mouth, but water kills me.<br>What am I?</p>
+            <input type="text" id="answerInput" placeholder="Enter your answer">
+            <button id="submitAnswer">Submit Answer</button>
+        </div>
         <button id="revealBtn">JACK IN</button>
-        <canvas id="photoCanvas" width="300" height="300" style="display: none;"></canvas>
-        <div id="messageBox" style="display: none;"></div>
+        <canvas id="photoCanvas" width="300" height="300"></canvas>
+        <div id="messageBox"></div>
     </div>
     <script>
-            const revealBtn = document.getElementById('revealBtn');
-            const photoCanvas = document.getElementById('photoCanvas');
-            const ctx = photoCanvas.getContext('2d');
-            const messageBox = document.getElementById('messageBox');
-            const messages = [
-                "Happy birthday to our brilliant mechanical engineer!",
-                "Wishing you a year full of innovative ideas and success!",
-                "May your birthday be as extraordinary as your engineering skills!",
-                "Here's to another year of making the impossible possible!",
-                "Celebrating the birthday of the man who can fix anything!"
-            ];
+        const riddleContainer = document.getElementById('riddleContainer');
+        const answerInput = document.getElementById('answerInput');
+        const submitAnswer = document.getElementById('submitAnswer');
+        const revealBtn = document.getElementById('revealBtn');
+        const photoCanvas = document.getElementById('photoCanvas');
+        const ctx = photoCanvas.getContext('2d');
+        const messageBox = document.getElementById('messageBox');
+        const messages = [
+            "Happy birthday to our brilliant mechanical engineer!",
+            "Wishing you a year full of innovative ideas and success!",
+            "May your birthday be as extraordinary as your engineering skills!",
+            "Here's to another year of making the impossible possible!",
+            "Celebrating the birthday of the man who can fix anything!"
+        ];
 
-            revealBtn.addEventListener('click', () => {
-                revealBtn.style.display = 'none';
-                photoCanvas.style.display = 'block';
-                messageBox.style.display = 'flex';
+        submitAnswer.addEventListener('click', checkAnswer);
 
-                const img = new Image();
-                img.crossOrigin = "Anonymous";
-                img.src = 'shantanu.png';
-                img.onload = () => {
-                    const canvasWidth = 300;
-                    const canvasHeight = 300;
-                    const pixelSize = 5; // Smaller pixel size for better clarity
-                    const totalPixels = (canvasWidth / pixelSize) * (canvasHeight / pixelSize);
-                    let revealedPixels = 0;
+        function checkAnswer() {
+            const answer = answerInput.value.toLowerCase().trim();
+            if (answer === 'fire') {
+                riddleContainer.innerHTML = '<p>Correct! You\'ve unlocked your birthday surprise.</p>';
+                revealBtn.style.display = 'block';
+            } else {
+                answerInput.value = '';
+                answerInput.placeholder = 'Try again';
+            }
+        }
 
-                    // Create an off-screen canvas for the pixelated image
-                    const offscreenCanvas = document.createElement('canvas');
-                    offscreenCanvas.width = canvasWidth;
-                    offscreenCanvas.height = canvasHeight;
-                    const offscreenCtx = offscreenCanvas.getContext('2d');
+        revealBtn.addEventListener('click', () => {
+            revealBtn.style.display = 'none';
+            photoCanvas.style.display = 'block';
+            messageBox.style.display = 'flex';
 
-                    // Draw the full image on the off-screen canvas
-                    offscreenCtx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = 'shantanu.png';
+            img.onload = () => {
+                const canvasWidth = 300;
+                const canvasHeight = 300;
+                const pixelSize = 5;
+                const totalPixels = (canvasWidth / pixelSize) * (canvasHeight / pixelSize);
+                let revealedPixels = 0;
 
-                    function revealPixel() {
-                        for (let i = 0; i < 100; i++) { // Reveal 100 pixels at a time for faster reveal
-                            if (revealedPixels >= totalPixels) break;
+                const offscreenCanvas = document.createElement('canvas');
+                offscreenCanvas.width = canvasWidth;
+                offscreenCanvas.height = canvasHeight;
+                const offscreenCtx = offscreenCanvas.getContext('2d');
 
-                            const x = Math.floor(Math.random() * (canvasWidth / pixelSize)) * pixelSize;
-                            const y = Math.floor(Math.random() * (canvasHeight / pixelSize)) * pixelSize;
+                offscreenCtx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
 
-                            // Get the color of the pixel from the off-screen canvas
-                            const imageData = offscreenCtx.getImageData(x, y, pixelSize, pixelSize);
+                function revealPixel() {
+                    for (let i = 0; i < 100; i++) {
+                        if (revealedPixels >= totalPixels) break;
 
-                            // Draw the pixel on the main canvas
-                            ctx.putImageData(imageData, x, y);
+                        const x = Math.floor(Math.random() * (canvasWidth / pixelSize)) * pixelSize;
+                        const y = Math.floor(Math.random() * (canvasHeight / pixelSize)) * pixelSize;
 
-                            revealedPixels++;
-                        }
+                        const imageData = offscreenCtx.getImageData(x, y, pixelSize, pixelSize);
+                        ctx.putImageData(imageData, x, y);
 
-                        if (revealedPixels < totalPixels) {
-                            requestAnimationFrame(revealPixel);
-                        } else {
-                            // Fully reveal the image after the pixelation effect
-                            setTimeout(() => {
-                                ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-                            }, 500);
-                        }
+                        revealedPixels++;
                     }
 
-                    revealPixel();
-                };
+                    if (revealedPixels < totalPixels) {
+                        requestAnimationFrame(revealPixel);
+                    } else {
+                        setTimeout(() => {
+                            ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+                        }, 500);
+                    }
+                }
 
-                startMatrix();
-            });
+                revealPixel();
+            };
+
+            startMatrix();
+        });
+
         function startMatrix() {
             const canvas = document.getElementById('matrixCanvas');
             const ctx = canvas.getContext('2d');
@@ -260,11 +332,17 @@
             currentMessageIndex = (currentMessageIndex + 1) % messages.length;
             messageBox.textContent = messages[currentMessageIndex];
             messageBox.style.animation = 'none';
-            messageBox.offsetHeight; // Trigger reflow
+            messageBox.offsetHeight;
             messageBox.style.animation = 'pulse 0.5s';
         }
 
-        setInterval(changeMessage, 5000); // Change message every 5 seconds
+        setInterval(changeMessage, 5000);
+
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('matrixCanvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 
